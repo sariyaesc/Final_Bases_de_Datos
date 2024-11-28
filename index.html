@@ -7,27 +7,29 @@
     <title>Final_Base_de_Datos</title>
 </head>
 <body>
-    <h2>Final de Base de Datos </h2>
+    <h2>Final de Base de Datos</h2>
     <p>Sara Escamilla Enríquez</p>
     <p>12105 ITIT: 5to semestre</p>
 
     <button id="boton_libro">Libros</button>
-    <button id="boton_categorias">Categorías</button>
+    <button id="boton_autores">Autores</button>
 
-    <!-- Contenedor para la lista de libros -->
+    <!-- Contenedor para los datos -->
     <div id="output"></div>
 
     <script>
-        // Seleccionar el botón y el contenedor donde se mostrarán los datos
+        // Seleccionar botones y contenedor
         const botonLibros = document.getElementById('boton_libro');
+        const botonAutores = document.getElementById('boton_autores');
         const output = document.getElementById('output');
 
-        // URL de la API
-        const apiUrl = 'http://localhost:3000/libros';
+        // URLs de la API
+        const apiLibrosUrl = 'http://localhost:3000/libros';
+        const apiAutoresUrl = 'http://localhost:3000/autors';
 
-        // Función para obtener los libros de la API y mostrarlos
+        // Función para obtener y mostrar los libros
         const mostrarLibros = () => {
-            fetch(apiUrl)
+            fetch(apiLibrosUrl)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error al conectar con la API: ${response.status}`);
@@ -35,14 +37,16 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Limpiar el contenido previo
+                    // Limpiar contenido previo
                     output.innerHTML = '';
 
-                    // Crear una lista con los libros
+                    // Crear lista con los libros
                     const lista = document.createElement('ul');
                     data.forEach(libro => {
                         const listItem = document.createElement('li');
-                        listItem.textContent = libro.titulo || `Libro sin título (ID: ${libro.id})`;
+                        const titulo = libro.titulo || `Libro sin título (ID: ${libro.id})`;
+                        const precio = libro.precio ? `$${libro.precio}` : 'Precio no disponible';
+                        listItem.textContent = `${titulo} - ${precio}`;
                         lista.appendChild(listItem);
                     });
 
@@ -55,8 +59,41 @@
                 });
         };
 
-        // Asociar el evento al botón
+        // Función para obtener y mostrar los autores
+        const mostrarAutores = () => {
+            fetch(apiAutoresUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error al conectar con la API: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Limpiar contenido previo
+                    output.innerHTML = '';
+
+                    // Crear lista con los autores
+                    const lista = document.createElement('ul');
+                    data.forEach(autor => {
+                        const nombre = autor.nombre || 'Nombre no disponible';
+                        const paterno = autor.paterno || 'Apellido no disponible'; // Ajuste aquí
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${nombre} ${paterno}`;
+                        lista.appendChild(listItem);
+                    });
+
+                    // Insertar la lista en el contenedor
+                    output.appendChild(lista);
+                })
+                .catch(error => {
+                    console.error('Error al conectar con la API:', error);
+                    output.textContent = 'Error al cargar los autores.';
+                });
+        };
+
+        // Asociar eventos a los botones
         botonLibros.addEventListener('click', mostrarLibros);
+        botonAutores.addEventListener('click', mostrarAutores);
     </script>
 </body>
 </html>
