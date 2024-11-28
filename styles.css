@@ -1,0 +1,27 @@
+body{
+    margin:30px;
+    font-family: 'Montserrat';
+
+}
+
+h2 {
+    
+    font-weight: normal;
+    display: inline-block;
+    background: linear-gradient(rgba(0, 0, 255, 0.3) 60%, transparent 40%);
+    line-height: 2; /* Ajusta para que el subrayado se alinee correctamente */
+}
+
+p{
+    font-weight: normal;
+    font-size:15px;
+}
+
+button{
+    background-color:aliceblue;
+    margin-right:10px;
+    border-radius: 10px;
+    padding: 10PX;
+    background: linear-gradient(rgba(0, 0, 255, 0.3) 100%, transparent 40%);
+    border-width: 0px;
+}
