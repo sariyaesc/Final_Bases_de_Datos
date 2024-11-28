@@ -8,27 +8,55 @@
 </head>
 <body>
     <h2>Final de Base de Datos </h2>
-    <P>Sara Escamilla Enríquez</P>
+    <p>Sara Escamilla Enríquez</p>
     <p>12105 ITIT: 5to semestre</p>
 
     <button id="boton_libro">Libros</button>
     <button id="boton_categorias">Categorías</button>
 
+    <!-- Contenedor para la lista de libros -->
+    <div id="output"></div>
 
     <script>
+        // Seleccionar el botón y el contenedor donde se mostrarán los datos
+        const botonLibros = document.getElementById('boton_libro');
+        const output = document.getElementById('output');
+
         // URL de la API
         const apiUrl = 'http://localhost:3000/libros';
 
-        // Obtener datos de la API
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                const output = document.getElementById('output');
-                output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-            })
-            .catch(error => {
-                console.error('Error al conectar con la API:', error);
-            });
+        // Función para obtener los libros de la API y mostrarlos
+        const mostrarLibros = () => {
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error al conectar con la API: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Limpiar el contenido previo
+                    output.innerHTML = '';
+
+                    // Crear una lista con los libros
+                    const lista = document.createElement('ul');
+                    data.forEach(libro => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = libro.titulo || `Libro sin título (ID: ${libro.id})`;
+                        lista.appendChild(listItem);
+                    });
+
+                    // Insertar la lista en el contenedor
+                    output.appendChild(lista);
+                })
+                .catch(error => {
+                    console.error('Error al conectar con la API:', error);
+                    output.textContent = 'Error al cargar los libros.';
+                });
+        };
+
+        // Asociar el evento al botón
+        botonLibros.addEventListener('click', mostrarLibros);
     </script>
 </body>
 </html>
